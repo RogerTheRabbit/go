@@ -1,0 +1,23 @@
+{
+  "name": "go",
+  "version": "1.0.0",
+  "description": "Go Links!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RogerTheRabbit/go.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RogerTheRabbit/go/issues"
+  },
+  "homepage": "https://github.com/RogerTheRabbit/go#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
