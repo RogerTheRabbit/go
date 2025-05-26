@@ -1,3 +1,4 @@
+const fp = require("path");
 const express = require("express");
 const app = express();
 const port = 3000;
@@ -7,7 +8,7 @@ const fs = require("node:fs");
 app.use(function (req, res, next) {
   let url = "https://kserver.uk/homelab-dashboard/assets/unavailable.svg";
   try {
-    const data = fs.readFileSync("./config.csv", "utf8");
+    const data = fs.readFileSync(fp.resolve(__dirname, "config.csv"), "utf8");
     const links = {};
     // Support new lines in windows and linux
     data.split(/[\r\n]+/).forEach((line) => {
