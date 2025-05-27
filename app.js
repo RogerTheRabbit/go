@@ -4,21 +4,14 @@ const Fuse = require("fuse.js");
 const app = express();
 const port = 3000;
 
-const fs = require("node:fs");
-const data = fs.readFileSync(fp.resolve(__dirname, "config.csv"), "utf8");
-const links = [];
-// Support new lines in windows and linux
-data.split(/[\r\n]+/).forEach((line) => {
-  entry = line.split(",");
-  if (entry.length == 2) {
-    links.push({ key: entry[0].trim(), url: entry[1].trim() });
-  }
-});
+const db = require("./db.js");
+
+db.initializeTable();
 
 app.use(express.json());
 app.use(express.urlencoded());
 
-app.use(function (req, res, next) {
+app.use(async function (req, res, next) {
   if (req.path === "/go" || req.path.startsWith("/go/")) {
     next();
     return;
@@ -32,6 +25,8 @@ app.use(function (req, res, next) {
       next();
       return;
     }
+
+    const links = await db.getAllLinks();
 
     const fuse = new Fuse(links, {
       keys: ["key", "url"],
@@ -73,20 +68,22 @@ app.get("/go/favicon", (req, res) => {
   res.sendFile(fp.join(__dirname + "/favicon.png"));
 });
 
-app.get("/go/links", (req, res) => {
-  res.send(links);
+app.get("/go/links", async (req, res) => {
+  res.send(await db.getAllLinks());
 });
 
-app.post("/go/links", (req, res) => {
+app.post("/go/links", async (req, res) => {
   const body = req.body;
-  links.push({ key: body["path"].trim(), url: body["url"].trim() });
+  await db.addLink(body["path"].trim(), body["url"].trim());
+  res.redirect("/go");
 });
 
-app.delete("/go/links", (req, res) => {
+app.post("/go/links/delete", async (req, res) => {
   const body = req.body;
-  links.push({ key: body["path"].trim(), url: body["url"].trim() });
+  await db.deleteLink(body.path);
+  res.sendStatus(200);
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Listening on port ${port}`);
 });
