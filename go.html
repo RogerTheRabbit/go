@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Go Links</title>
+    <link rel="icon" type="image/x-icon" href="/go/favicon" />
+  </head>
+  <body>
+    <h1>Links</h1>
+    <div id="links"></div>
+    <form method="post" action="/go/links">
+      <input placeholder="path" type="text" id="path" name="path" />
+      <input placeholder="link" type="text" id="url" name="url" />
+      <button type="submit">Add</button>
+    </form>
+    <form method="delete" action="/go/links">
+      <div>/${link.key}<br /><a href="${link.url}">${link.url}</a></div>
+      <button>🗑️</button>
+    </form>
+  </body>
+  <script>
+    const test = fetch("/go/links")
+      .then((resp) => resp.json())
+      .then((links) => {
+        console.log(links);
+        return (document.getElementById("links").innerHTML = links
+          .map(
+            (link) =>
+              `
+              <form method="delete" action="/go/links">
+                <div>/${link.key}<br /><a href="${link.url}">${link.url}</a></div>
+                <button>🗑️</button>
+              </form>
+              `
+          )
+          .join("<br/>"));
+      });
+  </script>
+</html>
