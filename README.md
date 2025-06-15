@@ -1,3 +1,7 @@
+# About
+
+Basically a simplified version of [golinks](https://www.golinks.io/) because I wanted it
+
 # Getting started
 
 ```bash
